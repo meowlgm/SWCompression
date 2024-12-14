@@ -187,14 +187,8 @@ git lfs pull
 git lfs checkout
 ```
 
-The first command will download the BitByteData dependency, which requires having Carthage installed. When using Xcode
-12 or later, you should also pass the `--xcf` option, or use the
-[xconfig workaround](https://github.com/Carthage/Carthage/blob/master/Documentation/Xcode12Workaround.md). Please note
-that when building SWCompression's Xcode project you may see ld warnings about a directory not being found. These are
-expected and harmless. Finally, you should keep in mind that support for non-xcframework method of installing
-dependencies is likely to be dropped in the future major update.
-
-The remaining commands will download the files used in tests. These files are stored in a
+The first command will download the BitByteData dependency, which requires having Carthage installed. The remaining
+commands will download the files used in tests. These files are stored in a
 [separate repository](https://github.com/tsolomko/SWCompression-Test-Files), using Git LFS. There are two reasons for
 this complicated setup. Firstly, some of these files can be quite big, and it would be unfortunate if the users of
 SWCompression had to download them during the installation. Secondly, Swift Package Manager and contemporary versions of
