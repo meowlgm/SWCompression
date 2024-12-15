@@ -17,8 +17,7 @@ var package = Package(
             targets: ["SWCompression"]),
     ],
     dependencies: [
-        .package(name: "BitByteData", url: "https://github.com/tsolomko/BitByteData",
-                 from: "2.0.0"),
+        .package(url: "https://github.com/tsolomko/BitByteData", from: "2.0.0"),
     ],
     targets: [
         .target(
@@ -33,7 +32,7 @@ var package = Package(
 )
 
 #if os(macOS)
-package.dependencies.append(.package(name: "SwiftCLI", url: "https://github.com/jakeheis/SwiftCLI", from: "6.0.0"))
+package.dependencies.append(.package(url: "https://github.com/jakeheis/SwiftCLI", from: "6.0.0"))
 package.targets.append(.executableTarget(name: "swcomp", dependencies: ["SWCompression", "SwiftCLI"], path: "Sources",
             exclude: ["Common", "7-Zip", "BZip2", "Deflate", "GZip", "LZ4", "LZMA", "LZMA2", "TAR", "XZ", "ZIP", "Zlib", "PrivacyInfo.xcprivacy"],
             sources: ["swcomp"]))
