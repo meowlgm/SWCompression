@@ -21,7 +21,7 @@ class Constants {
 
     static func data(forTest name: String, withType ext: String) throws -> Data {
         let url = Constants.url(forTest: name, withType: ext)
-        return try Data(contentsOf: url, options: .mappedIfSafe)
+        return try Data(contentsOf: url)
     }
 
     static func handle(forTest name: String, withType ext: String) throws -> FileHandle {
@@ -35,7 +35,7 @@ class Constants {
 
     static func data(forAnswer name: String) throws -> Data {
         let url = Constants.url(forAnswer: name)
-        return try Data(contentsOf: url, options: .mappedIfSafe)
+        return try Data(contentsOf: url)
     }
 
     private static func url(forAnswer name: String) -> URL {
