@@ -121,18 +121,6 @@ stages:
           ICU_PATH: 'C:\Program Files\swift\icu-69.1\usr\bin'
           SWIFT_DEV_PATH: 'C:\Program Files\swift\runtime-development\usr\bin'
           XCTEST_LIB_PATH: '\x86_64'
-        windowsSwift510:
-          imageName: 'windows-2019'
-          SWIFT_VERSION: '5.10.1'
-          ICU_PATH: 'C:\Program Files\swift\icu-69.1\usr\bin'
-          SWIFT_DEV_PATH: 'C:\Program Files\swift\runtime-development\usr\bin'
-          XCTEST_LIB_PATH: '\x86_64'
-        windowsSwift60:
-          imageName: 'windows-2019'
-          SWIFT_VERSION: '6.0.3'
-          ICU_PATH: 'C:\Program Files\swift\icu-69.1\usr\bin'
-          SWIFT_DEV_PATH: 'C:\Program Files\swift\runtime-development\usr\bin'
-          XCTEST_LIB_PATH: '\x86_64'
     pool:
       vmImage: $(imageName)
     variables:
@@ -151,8 +139,26 @@ stages:
     - script: |
         set PATH=C:\Library\Developer\Toolchains\unknown-Asserts-development.xctoolchain\usr\bin;%SWIFT_DEV_PATH%;%ICU_PATH%;%LocalAppData%\Programs\Swift;%PATH%
         swift.exe --version
-        swift.exe build --target SWCompression %SWIFTFLAGS%
-        swift.exe build -c release --target SWCompression %SWIFTFLAGS%
+        swift.exe build %SWIFTFLAGS%
+        swift.exe build -c release %SWIFTFLAGS%
+      displayName: 'Build SPM Debug & Release'
+  - job: windowsDocker
+    strategy:
+      matrix:
+        windowsSwift510:
+          imageName: 'windows-2022'
+          containerImage: 'swift:5.10.1-windowsservercore-ltsc2022'
+        windowsSwift60:
+          imageName: 'windows-2022'
+          containerImage: 'swift:6.0.3-windowsservercore-ltsc2022'
+    pool:
+      vmImage: $(imageName)
+    container: $[ variables['containerImage'] ]
+    steps:
+    - script: |
+        swift.exe --version
+        swift.exe build
+        swift.exe build -c release
       displayName: 'Build SPM Debug & Release'
 - stage: deploy
   displayName: Deploy
