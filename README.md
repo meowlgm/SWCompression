@@ -34,6 +34,10 @@ Also, SWCompression is _written with Swift only._
 
 SWCompression can be integrated into your project using Swift Package Manager, CocoaPods, or Carthage.
 
+__Note:__ Due to [upcoming](https://blog.cocoapods.org/CocoaPods-Specs-Repo/) deprecation of CocoaPods no new releases
+of SWCompression will be published using CocoaPods. The last release of SWCompression made available via CocoaPods was
+4.8.7. Consider switching to Swift Package Manager instead.
+
 ### Swift Package Manager
 
 To install using SPM, add SWCompression to you package dependencies and specify it as a dependency for your target, e.g.:
