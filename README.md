@@ -175,9 +175,6 @@ In the case of a bug, it will be especially helpful if you attach a file (archiv
 
 If you'd like to contribute, please [create a pull request](https://github.com/tsolomko/SWCompression/pulls) on GitHub.
 
-__Note:__ If you are considering working on SWCompression, please note that Xcode project (SWCompression.xcodeproj)
-was created manually and you shouldn't use `swift package generate-xcodeproj` command.
-
 ### Executing tests locally
 
 If you want to run tests on your computer, you need to do a couple of additional steps after cloning the repository:
