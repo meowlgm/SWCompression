@@ -66,6 +66,13 @@ stages:
         git lfs pull
         git lfs checkout
       displayName: 'Download or update test files'
+    - script: |
+        set -e -o xtrace
+        xcrun simctl list > /dev/null
+        xcodebuild -downloadPlatform iOS
+        xcodebuild -downloadPlatform watchOS
+        xcodebuild -downloadPlatform tvOS
+      displayName: 'Install Darwin platforms'
     - script: ./utils.py download-bbd-macos
       displayName: 'Download BitByteData'
     - script: ./utils.py ci script-macos
