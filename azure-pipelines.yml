@@ -74,8 +74,6 @@ stages:
         xcodebuild -downloadPlatform watchOS
         xcodebuild -downloadPlatform tvOS
       displayName: 'Install Darwin platforms'
-    - script: ./utils.py download-bbd-macos
-      displayName: 'Download BitByteData'
     - script: ./utils.py ci script-macos
       displayName: 'Build & Test'
     - script: swift build -c release

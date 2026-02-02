@@ -52,19 +52,6 @@ def action_cw(args):
     _sprun(["rm", "-f", "Package.resolved"])
     _sprun(["rm", "-f", "SWCompression.framework.zip"])
 
-def action_dbm(args):
-    print("=> Downloading BitByteData dependency using Carthage")
-    script = ["carthage", "bootstrap", "--no-use-binaries", "--use-xcframeworks"]
-    if args.debug:
-        script += ["--configuration", "Debug"]
-    if args.macos_only:
-        script += ["--platform", "macOS"]
-    elif args.xros:
-        script += ["--platform", "macOS,iOS,watchOS,tvOS,visionOS"]
-    else:
-        script += ["--platform", "macOS,iOS,watchOS,tvOS"]
-    _sprun(script)
-
 def action_pr(args):
     _sprun(["agvtool", "next-version", "-all"])
     _sprun(["agvtool", "new-marketing-version", args.version])
@@ -115,18 +102,6 @@ parser_ci.set_defaults(func=action_ci)
 parser_cw = subparsers.add_parser("cleanup-workspace", help="cleanup workspace",
                             description="cleans workspace from files produced by various build systems")
 parser_cw.set_defaults(func=action_cw)
-
-# Parser for 'download-bbd-macos' command.
-parser_dbm = subparsers.add_parser("download-bbd-macos", help="download BitByteData",
-                            description="downloads BitByteData dependency using Carthage (macOS only)")
-parser_dbm.add_argument("--debug", "-d", action="store_true", dest="debug",
-                        help="build BitByteData in Debug configuration")
-platform_group = parser_dbm.add_mutually_exclusive_group()
-platform_group.add_argument("--macos-only", action="store_true", dest="macos_only",
-                            help="build BitByteData for macOS only")
-platform_group.add_argument("--xros", action="store_true", dest="xros",
-                            help="build BitByteData for visionOS as well (requires Apple Silicon)")
-parser_dbm.set_defaults(func=action_dbm)
 
 # Parser for 'prepare-release' command.
 parser_pr = subparsers.add_parser("prepare-release", help="prepare next release",
