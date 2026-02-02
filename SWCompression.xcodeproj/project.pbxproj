@@ -275,6 +275,7 @@
 		E6C057D627498F5A007C83DF /* TarWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6C057D527498F5A007C83DF /* TarWriter.swift */; };
 		E6C4150726FE230A00F9D36F /* XxHash32.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6C4150626FE230A00F9D36F /* XxHash32.swift */; };
 		E6D86D2F26FE35C50032CFFA /* XxHash32Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6D86D2E26FE35C50032CFFA /* XxHash32Tests.swift */; };
+		E6DCC9D82F30DA080042AE2E /* BitByteData in Frameworks */ = {isa = PBXBuildFile; productRef = E6DCC9D72F30DA080042AE2E /* BitByteData */; };
 		E6DF9ECE2704BF14003BD91E /* test_multi_frame.lz4 in Resources */ = {isa = PBXBuildFile; fileRef = E6DF9ECD2704BF14003BD91E /* test_multi_frame.lz4 */; };
 		E6E49D522BD5081D00BFC756 /* PrivacyInfo.xcprivacy in CopyFiles */ = {isa = PBXBuildFile; fileRef = E6E49D502BD507D700BFC756 /* PrivacyInfo.xcprivacy */; };
 		E6EDD6A826F7767F00884532 /* test_minor_version_3.7z in Resources */ = {isa = PBXBuildFile; fileRef = E6EDD6A626F7767E00884532 /* test_minor_version_3.7z */; };
@@ -589,6 +590,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				06F0659A1FFB761600312A82 /* SWCompression.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E6DCC9D52F30DA020042AE2E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E6DCC9D82F30DA080042AE2E /* BitByteData in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1125,10 +1134,12 @@
 			buildPhases = (
 				06BE1AC31DB410F100EE0F59 /* Sources */,
 				E6E49D512BD5081700BFC756 /* CopyFiles */,
+				E6DCC9D52F30DA020042AE2E /* Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				E6DCC9DA2F30DB4E0042AE2E /* PBXTargetDependency */,
 			);
 			name = SWCompression;
 			productName = SWCompression;
@@ -1184,6 +1195,9 @@
 				Base,
 			);
 			mainGroup = 06BE1ABE1DB410F100EE0F59;
+			packageReferences = (
+				E6DCC9D12F30D7610042AE2E /* XCRemoteSwiftPackageReference "BitByteData" */,
+			);
 			productRefGroup = 06BE1AC91DB410F100EE0F59 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -1517,6 +1531,10 @@
 			target = 06BE1AC71DB410F100EE0F59 /* SWCompression */;
 			targetProxy = 06F0659B1FFB761600312A82 /* PBXContainerItemProxy */;
 		};
+		E6DCC9DA2F30DB4E0042AE2E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = E6DCC9D92F30DB4E0042AE2E /* BitByteData */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
@@ -1778,6 +1796,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		E6DCC9D12F30D7610042AE2E /* XCRemoteSwiftPackageReference "BitByteData" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/tsolomko/BitByteData";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.4;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		E6DCC9D72F30DA080042AE2E /* BitByteData */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E6DCC9D12F30D7610042AE2E /* XCRemoteSwiftPackageReference "BitByteData" */;
+			productName = BitByteData;
+		};
+		E6DCC9D92F30DB4E0042AE2E /* BitByteData */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E6DCC9D12F30D7610042AE2E /* XCRemoteSwiftPackageReference "BitByteData" */;
+			productName = BitByteData;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 06BE1ABF1DB410F100EE0F59 /* Project object */;
 }
