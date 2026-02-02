@@ -43,11 +43,9 @@ def action_ci(args):
 
 def action_cw(args):
     _sprun(["rm", "-rf", "build/"])
-    _sprun(["rm", "-rf", "Carthage/"])
     _sprun(["rm", "-rf", "docs/"])
     _sprun(["rm", "-rf", "Pods/"])
     _sprun(["rm", "-rf", ".build/"])
-    _sprun(["rm", "-f", "Cartfile.resolved"])
     _sprun(["rm", "-f", "docs.json"])
     _sprun(["rm", "-f", "Package.resolved"])
     _sprun(["rm", "-f", "SWCompression.framework.zip"])
