@@ -44,7 +44,6 @@ def action_ci(args):
 def action_cw(args):
     _sprun(["rm", "-rf", "build/"])
     _sprun(["rm", "-rf", "docs/"])
-    _sprun(["rm", "-rf", "Pods/"])
     _sprun(["rm", "-rf", ".build/"])
     _sprun(["rm", "-f", "docs.json"])
     _sprun(["rm", "-f", "Package.resolved"])
@@ -53,16 +52,6 @@ def action_cw(args):
 def action_pr(args):
     _sprun(["agvtool", "next-version", "-all"])
     _sprun(["agvtool", "new-marketing-version", args.version])
-
-    f = open("SWCompression.podspec", "r", encoding="utf-8")
-    lines = f.readlines()
-    f.close()
-    f = open("SWCompression.podspec", "w", encoding="utf-8")
-    for line in lines:
-        if line.startswith("  s.version      = "):
-            line = "  s.version      = \"" + args.version + "\"\n"
-        f.write(line)
-    f.close()
 
     f = open(".jazzy.yaml", "r", encoding="utf-8")
     lines = f.readlines()
