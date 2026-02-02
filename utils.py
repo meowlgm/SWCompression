@@ -23,7 +23,7 @@ def _ci_script_macos():
     _sprun_shell("xcodebuild -version")
     _sprun(["swift", "--version"])
     xcodebuild_command_parts = ["xcodebuild", "-quiet", "-project", "SWCompression.xcodeproj", "-scheme", "SWCompression"]
-    destinations_actions = [(["-destination 'platform=OS X'"], ["clean", "test"]),
+    destinations_actions = [(["-destination 'platform=macOS'"], ["clean", "test"]),
                     (["-destination 'platform=iOS Simulator,name=" + os.environ["IOS_SIMULATOR"] + "'"], ["clean", "test"]),
                     (["-destination 'platform=watchOS Simulator,name=" + os.environ["WATCHOS_SIMULATOR"] + "'"], ["clean", "test"]),
                     (["-destination 'platform=tvOS Simulator,name=Apple TV'"], ["clean", "test"])]
