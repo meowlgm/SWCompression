@@ -26,7 +26,8 @@ public class BZip2: DecompressionAlgorithm {
     }
 
     static func decompress(_ bitReader: MsbBitReader) throws -> Data {
-        // Valid BZip2 "archive" must contain at least 14 bytes of data.
+        // Valid BZip2 "archive" must contain at least 14 bytes of data: magic number (2 bytes), method (1 byte), block
+        // size (1 byte), block type (6 bytes), block CRC (4 bytes).
         guard bitReader.bitsLeft >= 14 * 8
             else { throw BZip2Error.wrongMagic }
 
@@ -44,7 +45,7 @@ public class BZip2: DecompressionAlgorithm {
 
         var totalCRC: UInt32 = 0
         while true {
-            // Using `Int64` because 48 bits may not fit into `Int` on some platforms.
+            // Using `UInt64` because 48 bits may not fit into `Int` on some platforms.
             let blockType = bitReader.uint64(fromBits: 48)
 
             let blockCRC32 = bitReader.uint32(fromBits: 32)
