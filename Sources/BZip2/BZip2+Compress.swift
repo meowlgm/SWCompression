@@ -175,10 +175,14 @@ extension BZip2: CompressionAlgorithm {
         bitWriter.write(number: tables.count, bitsCount: 3)
         bitWriter.write(number: selectors.count, bitsCount: 15)
 
-        let mtfSelectors = mtf(selectors, characters: Array(0..<selectors.count))
+        // Selectors are indices into `tables` list, so by construction they can only take values between 0 and
+        // `tables.count - 1`. This correspondingly limits the list of characters for the MTF transform.
+        let mtfSelectors = mtf(selectors, maxValue: tables.count - 1)
         for selector in mtfSelectors {
-            guard selector <= 5
-                else { fatalError("Incorrect selector.") }
+            // The output of MTF transform are the indices into the supplied characters list. Since the length of the
+            // characters list is given by `tables.count`, by construction `selector` should be between 0 and
+            // `tables.count - 1`.
+            assert(selector < tables.count)
             bitWriter.write(bits: Array(repeating: 1, count: selector))
             bitWriter.write(bit: 0)
         }
@@ -244,10 +248,10 @@ extension BZip2: CompressionAlgorithm {
         return out
     }
 
-    private static func mtf(_ array: [Int], characters: [Int]) -> [Int] {
+    /// Assumes that the characters are given by a list of integers from 0 up to and including `maxValue`.
+    private static func mtf(_ array: [Int], maxValue: Int) -> [Int] {
         var out = [Int]()
-        /// Mutable copy of `characters`.
-        var dictionary = characters
+        var dictionary = Array(0...maxValue)
         for i in 0..<array.count {
             let index = dictionary.firstIndex(of: array[i])!
             out.append(index)
