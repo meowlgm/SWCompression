@@ -54,7 +54,7 @@ final class RunBenchmarkCommand: Command {
             if baseMetadatas.count == 1 {
                 baseMetadatas[baseMetadatas.first!.key] = ""
             }
-            for (metadataUUID, index) in baseMetadatas.sorted(by: { $0.value < $1.value }) {
+            for (metadataUUID, index) in baseMetadatas.sorted(by: { Int($0.value.dropFirst().dropLast())! < Int($1.value.dropFirst().dropLast())! }) {
                 print("BASE\(index) Metadata")
                 print("----------------")
                 baseSaveFile.metadatas[metadataUUID]!.print()
@@ -110,7 +110,7 @@ final class RunBenchmarkCommand: Command {
 
             if let baseResults = baseResults[result.id] {
                 print("\nNEW:  average = \(benchmark.format(avg)), standard deviation = \(benchmark.format(std))")
-                for (other, baseUUID) in baseResults {
+                for (other, baseUUID) in baseResults.sorted(by: { Int(baseMetadatas[$0.1]!.dropFirst().dropLast())! < Int(baseMetadatas[$1.1]!.dropFirst().dropLast())! }) {
                     print("BASE\(baseMetadatas[baseUUID]!): average = \(benchmark.format(other.avg)), standard deviation = \(benchmark.format(other.std))")
                     result.printComparison(with: other)
                 }

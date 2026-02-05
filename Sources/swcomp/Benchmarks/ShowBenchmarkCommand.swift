@@ -26,7 +26,7 @@ final class ShowBenchmarkCommand: Command {
         if newMetadatas.count == 1 {
             newMetadatas[newMetadatas.first!.key] = ""
         }
-        for (metadataUUID, index) in newMetadatas.sorted(by: { $0.value < $1.value }) {
+        for (metadataUUID, index) in newMetadatas.sorted(by: { Int($0.value.dropFirst().dropLast())! < Int($1.value.dropFirst().dropLast())! }) {
             print("NEW\(index) Metadata")
             print("---------------")
             newSaveFile.metadatas[metadataUUID]!.print()
@@ -47,7 +47,7 @@ final class ShowBenchmarkCommand: Command {
             if baseMetadatas.count == 1 {
                 baseMetadatas[baseMetadatas.first!.key] = ""
             }
-            for (metadataUUID, index) in baseMetadatas.sorted(by: { $0.value < $1.value }) {
+            for (metadataUUID, index) in baseMetadatas.sorted(by: { Int($0.value.dropFirst().dropLast())! < Int($1.value.dropFirst().dropLast())! }) {
                 print("BASE\(index) Metadata")
                 print("----------------")
                 baseSaveFile.metadatas[metadataUUID]!.print()
@@ -61,14 +61,14 @@ final class ShowBenchmarkCommand: Command {
 
         for resultId in newResults.keys.sorted() {
             let results = newResults[resultId]!
-            for (result, metadataUUID) in results {
+            for (result, metadataUUID) in results.sorted(by: { Int(newMetadatas[$0.1]!.dropFirst().dropLast())! < Int(newMetadatas[$1.1]!.dropFirst().dropLast())! }) {
                 let benchmark = Benchmarks(rawValue: result.name)?.initialized(result.input)
 
                 print("\(result.name) => \(result.input), iterations = \(result.iterCount)")
 
                 print("NEW\(newMetadatas[metadataUUID]!):  average = \(benchmark.format(result.avg)), standard deviation = \(benchmark.format(result.std))")
                 if let baseResults = baseResults[resultId] {
-                    for (other, baseUUID) in baseResults {
+                    for (other, baseUUID) in baseResults.sorted(by: { Int(baseMetadatas[$0.1]!.dropFirst().dropLast())! < Int(baseMetadatas[$1.1]!.dropFirst().dropLast())! }) {
                         print("BASE\(baseMetadatas[baseUUID]!): average = \(benchmark.format(other.avg)), standard deviation = \(benchmark.format(other.std))")
                         result.printComparison(with: other)
                     }
