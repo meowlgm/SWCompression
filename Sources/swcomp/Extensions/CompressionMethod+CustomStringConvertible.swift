@@ -3,7 +3,6 @@
 //
 // See LICENSE for license information
 
-import Foundation
 import SWCompression
 
 extension CompressionMethod: CustomStringConvertible {

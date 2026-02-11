@@ -8,7 +8,6 @@
 #endif
 
 import Foundation
-import SWCompression
 import SwiftCLI
 
 final class RunBenchmarkCommand: Command {
