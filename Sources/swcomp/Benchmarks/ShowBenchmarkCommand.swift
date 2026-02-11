@@ -61,12 +61,13 @@ final class ShowBenchmarkCommand: Command {
 
         for resultId in newResults.keys.sorted() {
             let results = newResults[resultId]!
+            print()
+            print("----------------")
+            print()
+            print("\(results[0].0.name) => \(results[0].0.input), iterations = \(results[0].0.iterCount)")
+            print()
             for (result, metadataUUID) in results.sorted(by: { Int(newMetadatas[$0.1]!.dropFirst().dropLast())! < Int(newMetadatas[$1.1]!.dropFirst().dropLast())! }) {
                 let benchmark = Benchmarks(rawValue: result.name)?.initialized(result.input)
-
-                print("\(result.name) => \(result.input), iterations = \(result.iterCount)")
-
-
                 if let warmup = result.warmup {
                     print("NEW\(newMetadatas[metadataUUID]!):  average = \(benchmark.format(result.avg)), standard deviation = \(benchmark.format(result.std)), warmup = \(benchmark.format(warmup))")
                 } else {
@@ -82,8 +83,6 @@ final class ShowBenchmarkCommand: Command {
                         result.printComparison(with: other)
                     }
                 }
-
-                print()
             }
         }
     }
