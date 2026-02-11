@@ -77,10 +77,14 @@ final class RunBenchmarkCommand: Command {
             let benchmark = self.selectedBenchmark.initialized(input)
             let iterationCount = self.iterationCount ?? benchmark.defaultIterationCount
 
+            let warmup: Double?
             if !self.noWarmup {
-                print("Warmup iteration...")
+                print("Warmup iteration...", terminator: " ")
                 // Zeroth (excluded) iteration.
-                benchmark.warmupIteration()
+                warmup = benchmark.warmupIteration()
+                print(benchmark.format(warmup!))
+            } else {
+                warmup = nil
             }
 
             var sum = 0.0
@@ -106,12 +110,16 @@ final class RunBenchmarkCommand: Command {
             let avg = sum / Double(iterationCount)
             let std = sqrt(squareSum / Double(iterationCount) - sum * sum / Double(iterationCount * iterationCount))
             let result = BenchmarkResult(name: self.selectedBenchmark.rawValue, input: input, iterCount: iterationCount,
-                                         avg: avg, std: std)
+                                         avg: avg, std: std, warmup: warmup)
 
             if let baseResults = baseResults[result.id] {
                 print("\nNEW:  average = \(benchmark.format(avg)), standard deviation = \(benchmark.format(std))")
                 for (other, baseUUID) in baseResults.sorted(by: { Int(baseMetadatas[$0.1]!.dropFirst().dropLast())! < Int(baseMetadatas[$1.1]!.dropFirst().dropLast())! }) {
-                    print("BASE\(baseMetadatas[baseUUID]!): average = \(benchmark.format(other.avg)), standard deviation = \(benchmark.format(other.std))")
+                    if let otherWarmup = other.warmup {
+                        print("BASE\(baseMetadatas[baseUUID]!): average = \(benchmark.format(other.avg)), standard deviation = \(benchmark.format(other.std)), warmup = \(benchmark.format(otherWarmup))")
+                    } else {
+                        print("BASE\(baseMetadatas[baseUUID]!): average = \(benchmark.format(other.avg)), standard deviation = \(benchmark.format(other.std))")
+                    }
                     result.printComparison(with: other)
                 }
             } else {

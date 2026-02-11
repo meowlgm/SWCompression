@@ -12,6 +12,7 @@ struct BenchmarkResult: Codable {
     var iterCount: Int
     var avg: Double
     var std: Double
+    var warmup: Double?
 
     var id: String {
         return [self.name, self.input, String(self.iterCount)].joined(separator: "<#>")

@@ -66,10 +66,19 @@ final class ShowBenchmarkCommand: Command {
 
                 print("\(result.name) => \(result.input), iterations = \(result.iterCount)")
 
-                print("NEW\(newMetadatas[metadataUUID]!):  average = \(benchmark.format(result.avg)), standard deviation = \(benchmark.format(result.std))")
+
+                if let warmup = result.warmup {
+                    print("NEW\(newMetadatas[metadataUUID]!):  average = \(benchmark.format(result.avg)), standard deviation = \(benchmark.format(result.std)), warmup = \(benchmark.format(warmup))")
+                } else {
+                    print("NEW\(newMetadatas[metadataUUID]!):  average = \(benchmark.format(result.avg)), standard deviation = \(benchmark.format(result.std))")
+                }
                 if let baseResults = baseResults[resultId] {
                     for (other, baseUUID) in baseResults.sorted(by: { Int(baseMetadatas[$0.1]!.dropFirst().dropLast())! < Int(baseMetadatas[$1.1]!.dropFirst().dropLast())! }) {
-                        print("BASE\(baseMetadatas[baseUUID]!): average = \(benchmark.format(other.avg)), standard deviation = \(benchmark.format(other.std))")
+                        if let otherWarmup = other.warmup {
+                            print("BASE\(baseMetadatas[baseUUID]!): average = \(benchmark.format(other.avg)), standard deviation = \(benchmark.format(other.std)), warmup = \(benchmark.format(otherWarmup))")
+                        } else {
+                            print("BASE\(baseMetadatas[baseUUID]!): average = \(benchmark.format(other.avg)), standard deviation = \(benchmark.format(other.std))")
+                        }
                         result.printComparison(with: other)
                     }
                 }
