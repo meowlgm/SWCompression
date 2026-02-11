@@ -32,7 +32,7 @@ final class RunBenchmarkCommand: Command {
     @Key("-d", "--description", description: "Adds a custom description when saving results")
     var description: String?
 
-    @Flag("-t", "--preserve-timestamp", description: "Adds a timestamp when saving a result")
+    @Flag("-t", "--preserve-timestamp", description: "Adds a timestamp when saving results")
     var preserveTimestamp: Bool
 
     @Flag("-W", "--no-warmup", description: "Disables warmup iteration")
@@ -139,7 +139,7 @@ final class RunBenchmarkCommand: Command {
             var isDir = ObjCBool(false)
             let saveFileExists = FileManager.default.fileExists(atPath: savePath, isDirectory: &isDir)
 
-            if self.append && saveFileExists  {
+            if self.append && saveFileExists {
                 if isDir.boolValue {
                     swcompExit(.benchmarkCannotAppendToDirectory)
                 }

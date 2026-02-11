@@ -19,6 +19,8 @@ enum SwcompError {
     case benchmarkReaderTarNoInputSize(String)
     case benchmarkCannotGetSubcommandPathWindows
     case benchmarkCannotAppendToDirectory
+    case benchmarkBadUUID
+    case benchmarkNoUUID
     case containerSymLinkDestPath(String)
     case containerHardLinkDestPath(String)
     case containerNoEntryData(String)
@@ -54,6 +56,10 @@ enum SwcompError {
             return 206
         case .benchmarkCannotAppendToDirectory:
             return 207
+        case .benchmarkBadUUID:
+            return 208
+        case .benchmarkNoUUID:
+            return 218
         case .containerSymLinkDestPath:
             return 301
         case .containerHardLinkDestPath:
@@ -99,6 +105,10 @@ enum SwcompError {
             return "Cannot get subcommand path on Windows. (This error should never be shown!)"
         case .benchmarkCannotAppendToDirectory:
             return "Cannot append results to the save path since it is a directory."
+        case .benchmarkBadUUID:
+            return "Specified run UUID is not well-formed."
+        case .benchmarkNoUUID:
+            return "Specified run UUID is not found in the file."
         case .containerSymLinkDestPath(let entryName):
             return "Unable to get destination path for symbolic link \(entryName)."
         case .containerHardLinkDestPath(let entryName):
