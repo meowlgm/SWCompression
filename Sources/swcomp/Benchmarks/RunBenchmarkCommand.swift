@@ -94,6 +94,7 @@ final class RunBenchmarkCommand: Command {
             #if !os(Linux)
                 fflush(__stdoutp)
             #endif
+            var iterations = [Double]()
             for i in 1...iterationCount {
                 if i > 1 {
                     print(", ", terminator: "")
@@ -105,12 +106,13 @@ final class RunBenchmarkCommand: Command {
                 #endif
                 sum += speed
                 squareSum += speed * speed
+                iterations.append(speed)
             }
 
             let avg = sum / Double(iterationCount)
             let std = sqrt(squareSum / Double(iterationCount) - sum * sum / Double(iterationCount * iterationCount))
             let result = BenchmarkResult(name: self.selectedBenchmark.rawValue, input: input, iterCount: iterationCount,
-                                         avg: avg, std: std, warmup: warmup)
+                                         avg: avg, std: std, warmup: warmup, iters: iterations)
 
             if let baseResults = baseResults[result.id] {
                 print("\nNEW:  average = \(benchmark.format(avg)), standard deviation = \(benchmark.format(std))")
