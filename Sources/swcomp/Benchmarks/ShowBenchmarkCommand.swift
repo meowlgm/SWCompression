@@ -18,6 +18,9 @@ final class ShowBenchmarkCommand: Command {
     @Key("-c", "--compare", description: "Compare with other saved benchmarks results")
     var comparePath: String?
 
+    @Flag("--print-uuid", description: "Prints internal UUIDs of saved benchmark runs")
+    var printUuid: Bool
+
     @Param var path: String
 
     func execute() throws {
@@ -29,6 +32,9 @@ final class ShowBenchmarkCommand: Command {
         for (metadataUUID, index) in newMetadatas.sorted(by: { Int($0.value.dropFirst().dropLast())! < Int($1.value.dropFirst().dropLast())! }) {
             print("NEW\(index) Metadata")
             print("---------------")
+            if self.printUuid {
+                print("UUID: \(metadataUUID)")
+            }
             newSaveFile.metadatas[metadataUUID]!.print()
         }
 
@@ -50,6 +56,9 @@ final class ShowBenchmarkCommand: Command {
             for (metadataUUID, index) in baseMetadatas.sorted(by: { Int($0.value.dropFirst().dropLast())! < Int($1.value.dropFirst().dropLast())! }) {
                 print("BASE\(index) Metadata")
                 print("----------------")
+                if self.printUuid {
+                    print("UUID: \(metadataUUID)")
+                }
                 baseSaveFile.metadatas[metadataUUID]!.print()
             }
 
