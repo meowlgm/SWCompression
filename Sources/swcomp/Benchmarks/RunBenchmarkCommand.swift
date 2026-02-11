@@ -47,7 +47,7 @@ final class RunBenchmarkCommand: Command {
         var baseResults = [String: [(BenchmarkResult, UUID)]]()
         var baseMetadatas = [UUID: String]()
         if let comparePath = comparePath {
-            let baseSaveFile = try SaveFile.load(from: comparePath)
+            let baseSaveFile = try OldSaveFile.load(from: comparePath)
 
             baseMetadatas = Dictionary(uniqueKeysWithValues: zip(baseSaveFile.metadatas.keys, (1...baseSaveFile.metadatas.count).map { "(\($0))" }))
             if baseMetadatas.count == 1 {
@@ -133,7 +133,7 @@ final class RunBenchmarkCommand: Command {
 
         if let savePath = self.savePath {
             let metadata = try BenchmarkMetadata(self.description, self.preserveTimestamp)
-            var saveFile: SaveFile
+            var saveFile: OldSaveFile
 
             var isDir = ObjCBool(false)
             let saveFileExists = FileManager.default.fileExists(atPath: savePath, isDirectory: &isDir)
@@ -142,7 +142,7 @@ final class RunBenchmarkCommand: Command {
                 if isDir.boolValue {
                     swcompExit(.benchmarkCannotAppendToDirectory)
                 }
-                saveFile = try SaveFile.load(from: savePath)
+                saveFile = try OldSaveFile.load(from: savePath)
                 var uuid: UUID
                 if let foundUUID = saveFile.metadatas.first(where: { $0.value == metadata })?.key {
                     uuid = foundUUID
@@ -152,10 +152,10 @@ final class RunBenchmarkCommand: Command {
                     } while saveFile.metadatas[uuid] != nil
                     saveFile.metadatas[uuid] = metadata
                 }
-                saveFile.runs.append(SaveFile.Run(metadataUUID: uuid, results: newResults))
+                saveFile.runs.append(OldSaveFile.Run(metadataUUID: uuid, results: newResults))
             } else {
                 let uuid = UUID()
-                saveFile = SaveFile(metadatas: [uuid: metadata], runs: [SaveFile.Run(metadataUUID: uuid, results: newResults)])
+                saveFile = OldSaveFile(metadatas: [uuid: metadata], runs: [OldSaveFile.Run(metadataUUID: uuid, results: newResults)])
             }
 
             let encoder = JSONEncoder()

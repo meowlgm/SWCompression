@@ -16,7 +16,7 @@ final class RemoveRunCommand: Command {
     @Param var path: String
 
     func execute() throws {
-        var saveFile = try SaveFile.load(from: self.path)
+        var saveFile = try OldSaveFile.load(from: self.path)
         guard let uuid = UUID(uuidString: self.runUUID)
             else { swcompExit(.benchmarkBadUUID) }
         guard saveFile.metadatas.contains(where: { $0.key == uuid} )

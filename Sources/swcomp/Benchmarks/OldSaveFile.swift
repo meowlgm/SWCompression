@@ -5,7 +5,7 @@
 
 import Foundation
 
-struct SaveFile: Codable {
+struct OldSaveFile: Codable {
 
     struct Run: Codable {
 
@@ -18,10 +18,10 @@ struct SaveFile: Codable {
 
     var runs: [Run]
 
-    static func load(from path: String) throws -> SaveFile {
+    static func load(from path: String) throws -> OldSaveFile {
         let decoder = JSONDecoder()
         let data = try Data(contentsOf: URL(fileURLWithPath: path))
-        return try decoder.decode(SaveFile.self, from: data)
+        return try decoder.decode(OldSaveFile.self, from: data)
     }
 
 }

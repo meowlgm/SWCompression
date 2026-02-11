@@ -30,7 +30,7 @@ final class ShowBenchmarkCommand: Command {
     }
 
     func execute() throws {
-        let newSaveFile = try SaveFile.load(from: self.path)
+        let newSaveFile = try OldSaveFile.load(from: self.path)
         var newMetadatas: [UUID: String]
         if let newUUIDString = self.selfCompare {
             guard let newUUID = UUID(uuidString: newUUIDString)
@@ -55,7 +55,7 @@ final class ShowBenchmarkCommand: Command {
         }
 
         var newResults = [String: [(BenchmarkResult, UUID)]]()
-        for newRun in newSaveFile.runs.filter ( { (run: SaveFile.Run) in newMetadatas.keys.contains(where: { $0 == run.metadataUUID }) }) {
+        for newRun in newSaveFile.runs.filter ( { (run: OldSaveFile.Run) in newMetadatas.keys.contains(where: { $0 == run.metadataUUID }) }) {
             newResults.merge(Dictionary(grouping: newRun.results.map { ($0, newRun.metadataUUID) }, by: { $0.0.id }),
                                   uniquingKeysWith: { $0 + $1 })
         }
@@ -63,7 +63,7 @@ final class ShowBenchmarkCommand: Command {
         var baseResults = [String: [(BenchmarkResult, UUID)]]()
         var baseMetadatas = [UUID: String]()
         if let comparePath = comparePath {
-            let baseSaveFile = try SaveFile.load(from: comparePath)
+            let baseSaveFile = try OldSaveFile.load(from: comparePath)
 
             baseMetadatas = Dictionary(uniqueKeysWithValues: zip(baseSaveFile.metadatas.keys, (1...baseSaveFile.metadatas.count).map { "(\($0))" }))
             if baseMetadatas.count == 1 {
@@ -100,7 +100,7 @@ final class ShowBenchmarkCommand: Command {
                 newSaveFile.metadatas[metadataUUID]!.print()
             }
 
-            for baseRun in newSaveFile.runs.filter ( { (run: SaveFile.Run) in !newMetadatas.keys.contains(where: { $0 == run.metadataUUID }) }) {
+            for baseRun in newSaveFile.runs.filter ( { (run: OldSaveFile.Run) in !newMetadatas.keys.contains(where: { $0 == run.metadataUUID }) }) {
                 baseResults.merge(Dictionary(grouping: baseRun.results.map { ($0, baseRun.metadataUUID) }, by: { $0.0.id }),
                                   uniquingKeysWith: { $0 + $1 })
             }
