@@ -21,6 +21,9 @@ final class ShowBenchmarkCommand: Command {
     @Flag("--print-uuid", description: "Prints internal UUIDs of saved benchmark runs")
     var printUuid: Bool
 
+    @Flag("--metadata-only", description: "Prints only metadata of saved benchmark runs")
+    var metadataOnly: Bool
+
     @Param var path: String
 
     func execute() throws {
@@ -66,6 +69,10 @@ final class ShowBenchmarkCommand: Command {
                 baseResults.merge(Dictionary(grouping: baseRun.results.map { ($0, baseRun.metadataUUID) }, by: { $0.0.id }),
                                   uniquingKeysWith: { $0 + $1 })
             }
+        }
+
+        if self.metadataOnly {
+            return
         }
 
         for resultId in newResults.keys.sorted() {
