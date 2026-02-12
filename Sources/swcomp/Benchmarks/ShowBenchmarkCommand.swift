@@ -30,111 +30,76 @@ final class ShowBenchmarkCommand: Command {
     }
 
     func execute() throws {
-        let newSaveFile = try OldSaveFile.load(from: self.path)
-        var newMetadatas: [UUID: String]
+        let newSaveFile = try SaveFile.load(from: self.path)
+        var newRuns: [SaveFile.Run]
         if let newUUIDString = self.selfCompare {
             guard let newUUID = UUID(uuidString: newUUIDString)
                 else { swcompExit(.benchmarkBadUUID) }
-            guard newSaveFile.metadatas.contains(where: { $0.key == newUUID} )
+            guard let newRun = newSaveFile.runs.first(where: { $0.uuid == newUUID} )
                 else { swcompExit(.benchmarkNoUUID) }
-            newMetadatas = [newUUID: ""]
+            newRuns = [newRun]
         } else {
-            newMetadatas = Dictionary(uniqueKeysWithValues: zip(newSaveFile.metadatas.keys, (1...newSaveFile.metadatas.count).map { "(\($0))" }))
-            if newMetadatas.count == 1 {
-                newMetadatas[newMetadatas.first!.key] = ""
-            }
+            newRuns = newSaveFile.runs
         }
+        self.printMetadatas(runs: newRuns, name: "NEW")
 
-        for (metadataUUID, index) in newMetadatas.sorted(by: { Int($0.value.dropFirst().dropLast())! < Int($1.value.dropFirst().dropLast())! }) {
-            print("NEW\(index) Metadata")
-            print("---------------")
-            if self.printUuid {
-                print("UUID: \(metadataUUID)")
-            }
-            newSaveFile.metadatas[metadataUUID]!.print()
-        }
-
-        var newResults = [String: [(BenchmarkResult, UUID)]]()
-        for newRun in newSaveFile.runs.filter ( { (run: OldSaveFile.Run) in newMetadatas.keys.contains(where: { $0 == run.metadataUUID }) }) {
-            newResults.merge(Dictionary(grouping: newRun.results.map { ($0, newRun.metadataUUID) }, by: { $0.0.id }),
-                                  uniquingKeysWith: { $0 + $1 })
-        }
-
-        var baseResults = [String: [(BenchmarkResult, UUID)]]()
-        var baseMetadatas = [UUID: String]()
+        var baseRuns = [SaveFile.Run]()
         if let comparePath = comparePath {
-            let baseSaveFile = try OldSaveFile.load(from: comparePath)
-
-            baseMetadatas = Dictionary(uniqueKeysWithValues: zip(baseSaveFile.metadatas.keys, (1...baseSaveFile.metadatas.count).map { "(\($0))" }))
-            if baseMetadatas.count == 1 {
-                baseMetadatas[baseMetadatas.first!.key] = ""
-            }
-            for (metadataUUID, index) in baseMetadatas.sorted(by: { Int($0.value.dropFirst().dropLast())! < Int($1.value.dropFirst().dropLast())! }) {
-                print("BASE\(index) Metadata")
-                print("----------------")
-                if self.printUuid {
-                    print("UUID: \(metadataUUID)")
-                }
-                baseSaveFile.metadatas[metadataUUID]!.print()
-            }
-
-            for baseRun in baseSaveFile.runs {
-                baseResults.merge(Dictionary(grouping: baseRun.results.map { ($0, baseRun.metadataUUID) }, by: { $0.0.id }),
-                                  uniquingKeysWith: { $0 + $1 })
-            }
+            let baseSaveFile = try SaveFile.load(from: comparePath)
+            baseRuns = baseSaveFile.runs
         } else if let newUUIDString = self.selfCompare {
-            guard let newUUID = UUID(uuidString: newUUIDString)
-                else { swcompExit(.benchmarkBadUUID) }
-            guard newSaveFile.metadatas.contains(where: { $0.key == newUUID} )
-                else { swcompExit(.benchmarkNoUUID) }
-            baseMetadatas = Dictionary(uniqueKeysWithValues: zip(newSaveFile.metadatas.keys.filter({ $0 != newUUID }), (1...(newSaveFile.metadatas.count - 1)).map { "(\($0))" }))
-            if baseMetadatas.count == 1 {
-                baseMetadatas[baseMetadatas.first!.key] = ""
-            }
-            for (metadataUUID, index) in baseMetadatas.sorted(by: { Int($0.value.dropFirst().dropLast())! < Int($1.value.dropFirst().dropLast())! }) {
-                print("BASE\(index) Metadata")
-                print("----------------")
-                if self.printUuid {
-                    print("UUID: \(metadataUUID)")
-                }
-                newSaveFile.metadatas[metadataUUID]!.print()
-            }
-
-            for baseRun in newSaveFile.runs.filter ( { (run: OldSaveFile.Run) in !newMetadatas.keys.contains(where: { $0 == run.metadataUUID }) }) {
-                baseResults.merge(Dictionary(grouping: baseRun.results.map { ($0, baseRun.metadataUUID) }, by: { $0.0.id }),
-                                  uniquingKeysWith: { $0 + $1 })
-            }
+            // No need to double-check validity of input UUID. It was done already when loading the "new" run.
+            let newUUID = UUID(uuidString: newUUIDString)!
+            baseRuns = newSaveFile.runs.filter({ $0.uuid != newUUID })
         }
+        self.printMetadatas(runs: baseRuns, name: "BASE")
 
-        if self.metadataOnly {
-            return
-        }
+        guard !self.metadataOnly
+            else { return }
 
-        for resultId in newResults.keys.sorted() {
-            let results = newResults[resultId]!
+        // There might be results for the same benchmark-input-iterCount tuple in different runs. We want to print those
+        // results together, so we have to group them based on their `id`.
+        let newResults = SaveFile.groupResults(runs: newRuns)
+        let baseResults = SaveFile.groupResults(runs: baseRuns)
+
+        // Even though we try to sort results before writing a save file, after grouping they can appear in `newResults`
+        // in essentially arbitrary order.
+        for id in newResults.keys.sorted() {
+            let results = newResults[id]!
             print()
             print("----------------")
             print()
-            print("\(results[0].0.name) => \(results[0].0.input), iterations = \(results[0].0.iterCount)")
+            print("\(results.first!.1.name) => \(results.first!.1.input), iterations = \(results.first!.1.iterCount)")
             print()
-            for (result, metadataUUID) in results.sorted(by: { Int(newMetadatas[$0.1]!.dropFirst().dropLast())! < Int(newMetadatas[$1.1]!.dropFirst().dropLast())! }) {
+            for (index, result) in results {
                 let benchmark = Benchmarks(rawValue: result.name)?.initialized(result.input)
                 if let warmup = result.warmup {
-                    print("NEW\(newMetadatas[metadataUUID]!):  average = \(benchmark.format(result.avg)), standard deviation = \(benchmark.format(result.std)), warmup = \(benchmark.format(warmup))")
+                    print("NEW(\(index + 1)):  average = \(benchmark.format(result.avg)), standard deviation = \(benchmark.format(result.std)), warmup = \(benchmark.format(warmup))")
                 } else {
-                    print("NEW\(newMetadatas[metadataUUID]!):  average = \(benchmark.format(result.avg)), standard deviation = \(benchmark.format(result.std))")
+                    print("NEW(\(index + 1)):  average = \(benchmark.format(result.avg)), standard deviation = \(benchmark.format(result.std))")
                 }
-                if let baseResults = baseResults[resultId] {
-                    for (other, baseUUID) in baseResults.sorted(by: { Int(baseMetadatas[$0.1]!.dropFirst().dropLast())! < Int(baseMetadatas[$1.1]!.dropFirst().dropLast())! }) {
-                        if let otherWarmup = other.warmup {
-                            print("BASE\(baseMetadatas[baseUUID]!): average = \(benchmark.format(other.avg)), standard deviation = \(benchmark.format(other.std)), warmup = \(benchmark.format(otherWarmup))")
+                if let baseResults = baseResults[id] {
+                    for (baseIndex, baseResult) in baseResults {
+                        if let baseWarmup = baseResult.warmup {
+                            print("BASE(\(baseIndex + 1)): average = \(benchmark.format(baseResult.avg)), standard deviation = \(benchmark.format(baseResult.std)), warmup = \(benchmark.format(baseWarmup))")
                         } else {
-                            print("BASE\(baseMetadatas[baseUUID]!): average = \(benchmark.format(other.avg)), standard deviation = \(benchmark.format(other.std))")
+                            print("BASE(\(baseIndex + 1)): average = \(benchmark.format(baseResult.avg)), standard deviation = \(benchmark.format(baseResult.std))")
                         }
-                        result.printComparison(with: other)
+                        result.printComparison(with: baseResult)
                     }
                 }
             }
+        }
+    }
+
+    private func printMetadatas(runs: [SaveFile.Run], name: String) {
+        for (index, run) in runs.enumerated() {
+            print("\(name)(\(index + 1)) Metadata")
+            print("---------------")
+            if self.printUuid {
+                print("UUID: \(run.uuid)")
+            }
+            run.metadata.print()
         }
     }
 

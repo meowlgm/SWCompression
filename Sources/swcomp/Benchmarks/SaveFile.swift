@@ -53,4 +53,15 @@ struct SaveFile: Codable {
         }
     }
 
+    static func groupResults(runs: [SaveFile.Run]) -> [String: [(Int, BenchmarkResult)]] {
+        var groupedResults = [String: [(Int, BenchmarkResult)]]()
+        for (index, run) in runs.enumerated() {
+            for result in run.results {
+                let resultId = result.id
+                groupedResults[resultId] = (groupedResults[resultId] ?? Array()) + [(index, result)]
+            }
+        }
+        return groupedResults
+    }
+
 }
