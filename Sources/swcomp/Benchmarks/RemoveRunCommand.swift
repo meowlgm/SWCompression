@@ -16,19 +16,18 @@ final class RemoveRunCommand: Command {
     @Param var path: String
 
     func execute() throws {
-        var saveFile = try OldSaveFile.load(from: self.path)
+        var saveFile = try SaveFile.load(from: self.path)
         guard let uuid = UUID(uuidString: self.runUUID)
             else { swcompExit(.benchmarkBadUUID) }
-        guard saveFile.metadatas.contains(where: { $0.key == uuid} )
-            else { swcompExit(.benchmarkNoUUID) }
-
-        saveFile.metadatas.removeValue(forKey: uuid)
-        saveFile.runs.removeAll(where: { $0.metadataUUID == uuid })
-
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
-        let data = try encoder.encode(saveFile)
-        try data.write(to: URL(fileURLWithPath: path))
+        if saveFile.runs.contains(where: { $0.uuid == uuid} ) {
+            saveFile.runs.removeAll(where: { $0.uuid == uuid })
+            let encoder = JSONEncoder()
+            encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+            let data = try encoder.encode(saveFile)
+            try data.write(to: URL(fileURLWithPath: path))
+        } else {
+            print("WARNING: Specified run UUID is not found in the file. No changes made.")
+        }
     }
 
 }
