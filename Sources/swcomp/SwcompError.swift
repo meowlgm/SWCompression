@@ -21,6 +21,7 @@ enum SwcompError {
     case benchmarkCannotAppendToDirectory
     case benchmarkBadUUID
     case benchmarkNoUUID
+    case benchmarkOldFormatNoUUIDMetadata(UUID)
     case containerSymLinkDestPath(String)
     case containerHardLinkDestPath(String)
     case containerNoEntryData(String)
@@ -60,6 +61,8 @@ enum SwcompError {
             return 208
         case .benchmarkNoUUID:
             return 218
+        case .benchmarkOldFormatNoUUIDMetadata:
+            return 209
         case .containerSymLinkDestPath:
             return 301
         case .containerHardLinkDestPath:
@@ -109,6 +112,8 @@ enum SwcompError {
             return "Specified run UUID is not well-formed."
         case .benchmarkNoUUID:
             return "Specified run UUID is not found in the file."
+        case .benchmarkOldFormatNoUUIDMetadata(let uuid):
+            return "No metadata found in the old format save file for UUID = \(uuid)."
         case .containerSymLinkDestPath(let entryName):
             return "Unable to get destination path for symbolic link \(entryName)."
         case .containerHardLinkDestPath(let entryName):
