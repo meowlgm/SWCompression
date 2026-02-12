@@ -15,7 +15,6 @@ struct OldSaveFile: Codable {
     }
 
     var metadatas: [UUID: BenchmarkMetadata]
-
     var runs: [Run]
 
     static func load(from path: String) throws -> OldSaveFile {

@@ -32,6 +32,10 @@ struct SaveFile: Codable {
         }
     }
 
+    init(runs: [SaveFile.Run]) {
+        self.runs = runs
+    }
+
     static func load(from path: String) throws -> SaveFile {
         let data = try Data(contentsOf: URL(fileURLWithPath: path))
         guard let generalDict = try? JSONSerialization.jsonObject(with: data) as? [String: Any]
