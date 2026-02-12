@@ -21,6 +21,9 @@ enum SwcompError {
     case benchmarkCannotAppendToDirectory
     case benchmarkBadUUID
     case benchmarkNoUUID
+    case benchmarkUnrecognizedSaveFile
+    case benchmarkUnrecognizedFormatVersion
+    case benchmarkUnsupportedFormatVersion(Int)
     case benchmarkOldFormatNoUUIDMetadata(UUID)
     case containerSymLinkDestPath(String)
     case containerHardLinkDestPath(String)
@@ -61,8 +64,14 @@ enum SwcompError {
             return 208
         case .benchmarkNoUUID:
             return 218
-        case .benchmarkOldFormatNoUUIDMetadata:
+        case .benchmarkUnrecognizedSaveFile:
             return 209
+        case .benchmarkUnrecognizedFormatVersion:
+            return 219
+        case .benchmarkUnsupportedFormatVersion:
+            return 229
+        case .benchmarkOldFormatNoUUIDMetadata:
+            return 239
         case .containerSymLinkDestPath:
             return 301
         case .containerHardLinkDestPath:
@@ -112,8 +121,14 @@ enum SwcompError {
             return "Specified run UUID is not well-formed."
         case .benchmarkNoUUID:
             return "Specified run UUID is not found in the file."
+        case .benchmarkUnrecognizedSaveFile:
+            return "The save file format is not recognized."
+        case .benchmarkUnrecognizedFormatVersion:
+            return "The save file format version is not recognized."
+        case .benchmarkUnsupportedFormatVersion(let formatVersion):
+            return "The save file format version \(formatVersion) is not supported."
         case .benchmarkOldFormatNoUUIDMetadata(let uuid):
-            return "No metadata found in the old format save file for UUID = \(uuid)."
+            return "No metadata found in an old format save file for UUID = \(uuid)."
         case .containerSymLinkDestPath(let entryName):
             return "Unable to get destination path for symbolic link \(entryName)."
         case .containerHardLinkDestPath(let entryName):

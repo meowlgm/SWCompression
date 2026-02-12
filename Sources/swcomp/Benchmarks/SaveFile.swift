@@ -33,9 +33,24 @@ struct SaveFile: Codable {
     }
 
     static func load(from path: String) throws -> SaveFile {
-        let decoder = JSONDecoder()
         let data = try Data(contentsOf: URL(fileURLWithPath: path))
-        return try decoder.decode(SaveFile.self, from: data)
+        guard let generalDict = try? JSONSerialization.jsonObject(with: data) as? [String: Any]
+            else { swcompExit(.benchmarkUnrecognizedSaveFile) }
+        if let formatVersion = generalDict["formatVersion"] {
+            guard let intFormatVersion = formatVersion as? Int
+                else { swcompExit(.benchmarkUnrecognizedFormatVersion) }
+            guard intFormatVersion == 2
+                else { swcompExit(.benchmarkUnsupportedFormatVersion(intFormatVersion)) }
+            let decoder = JSONDecoder()
+            return try decoder.decode(SaveFile.self, from: data)
+        } else if generalDict["metadatas"] != nil && generalDict["runs"] != nil {
+            let decoder = JSONDecoder()
+            let oldSaveFile = try decoder.decode(OldSaveFile.self, from: data)
+            print("WARNING: Old save file format detected. Its support will be removed in the future. Use \'benchmark convert' to upgrade.")
+            return SaveFile(oldSaveFile)
+        } else {
+            swcompExit(.benchmarkUnrecognizedSaveFile)
+        }
     }
 
 }
