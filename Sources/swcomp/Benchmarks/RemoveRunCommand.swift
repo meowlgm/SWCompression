@@ -26,8 +26,9 @@ final class RemoveRunCommand: Command {
         saveFile.runs.removeAll(where: { $0.metadataUUID == uuid })
 
         let encoder = JSONEncoder()
-        encoder.outputFormatting = .prettyPrinted
+        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
         let data = try encoder.encode(saveFile)
         try data.write(to: URL(fileURLWithPath: path))
     }
+
 }

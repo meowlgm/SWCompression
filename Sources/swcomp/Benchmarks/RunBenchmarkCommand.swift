@@ -159,8 +159,7 @@ final class RunBenchmarkCommand: Command {
             }
 
             let encoder = JSONEncoder()
-            encoder.outputFormatting = .prettyPrinted
-
+            encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
             let data = try encoder.encode(saveFile)
             try data.write(to: URL(fileURLWithPath: savePath))
         }
