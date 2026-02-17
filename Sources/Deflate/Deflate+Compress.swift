@@ -106,9 +106,9 @@ extension Deflate: CompressionAlgorithm {
         // Constructing Huffman trees for the case of block with preset alphabets.
         // In this case codes for literals and distances are fixed.
         /// Huffman tree for literal and length symbols/codes.
-        let mainLiterals = EncodingTree(codes: Constants.staticHuffmanLiteralCodes.codes, bitWriter, reverseCodes: true)
+        let mainLiterals = EncodingTree(Constants.staticHuffmanLiteralCodes.codes, bitWriter, reverseCodes: true)
         /// Huffman tree for backward distance symbols/codes.
-        let mainDistances = EncodingTree(codes: Constants.staticHuffmanDistanceCodes.codes, bitWriter, reverseCodes: true)
+        let mainDistances = EncodingTree(Constants.staticHuffmanDistanceCodes.codes, bitWriter, reverseCodes: true)
 
         for code in bldCodes {
             switch code {
