@@ -5,6 +5,8 @@
 
 import Foundation
 
+typealias HuffmanCodes = (codes: [Code], maxBits: Int)
+
 struct Code {
 
     /// Number of bits used for `code`.
@@ -13,7 +15,7 @@ struct Code {
     let symbol: Int
 
     /// `lengths` don't have to be sorted, but there must not be any 0 code lengths.
-    static func huffmanCodes(from lengths: [CodeLength]) -> (codes: [Code], maxBits: Int) {
+    static func huffmanCodes(from lengths: [CodeLength]) -> HuffmanCodes {
         // Sort `lengths` array to calculate canonical Huffman code.
         let sortedLengths = lengths.sorted()
 

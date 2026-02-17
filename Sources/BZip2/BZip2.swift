@@ -147,7 +147,7 @@ public class BZip2: DecompressionAlgorithm {
                     }
                 }
                 let codes = Code.huffmanCodes(from: lengths)
-                let table = DecodingTree(codes: codes.codes, maxBits: codes.maxBits, bitReader)
+                let table = DecodingTree(codes, bitReader)
                 tables.append(table)
             }
 
