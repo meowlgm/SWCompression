@@ -3,8 +3,6 @@
 //
 // See LICENSE for license information
 
-import Foundation
-
 extension FileSystemType {
 
     init(_ gzipOS: UInt8) {

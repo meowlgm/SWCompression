@@ -3,8 +3,6 @@
 //
 // See LICENSE for license information
 
-import Foundation
-
 enum BurrowsWheeler {
 
     static func transform(bytes: [Int]) -> ([Int], Int) {

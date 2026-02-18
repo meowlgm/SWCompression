@@ -3,8 +3,6 @@
 //
 // See LICENSE for license information
 
-import Foundation
-
 /// Suffix Array by Induced Sorting
 enum SuffixArray {
 

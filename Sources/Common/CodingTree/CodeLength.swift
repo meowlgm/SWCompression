@@ -3,8 +3,6 @@
 //
 // See LICENSE for license information
 
-import Foundation
-
 struct CodeLength: Equatable {
 
     let symbol: Int

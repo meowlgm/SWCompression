@@ -3,8 +3,6 @@
 //
 // See LICENSE for license information
 
-import Foundation
-
 /**
  Represents an error which happened while processing a 7-Zip container.
  It may indicate that either container is damaged or it might not be 7-Zip container at all.

@@ -3,8 +3,6 @@
 //
 // See LICENSE for license information
 
-import Foundation
-
 /**
  Represents the type of the file system on which an archive or container was created. File system determines the meaning
  of file attributes.

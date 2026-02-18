@@ -3,8 +3,6 @@
 //
 // See LICENSE for license information
 
-import Foundation
-
 enum LZMAConstants {
 
     static let topValue: UInt32 = 1 << 24

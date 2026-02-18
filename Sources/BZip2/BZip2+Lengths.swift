@@ -3,8 +3,6 @@
 //
 // See LICENSE for license information
 
-import Foundation
-
 // BZip2 specific function for generation of HuffmanLength array from stats.
 extension BZip2 {
 

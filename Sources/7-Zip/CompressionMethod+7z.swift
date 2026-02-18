@@ -3,8 +3,6 @@
 //
 // See LICENSE for license information
 
-import Foundation
-
 extension CompressionMethod {
 
     init(_ coderID: [UInt8]) {

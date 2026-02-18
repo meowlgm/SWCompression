@@ -3,8 +3,6 @@
 //
 // See LICENSE for license information
 
-import Foundation
-
 extension ContainerEntryType {
 
     init(_ fileTypeIndicator: UInt8) {

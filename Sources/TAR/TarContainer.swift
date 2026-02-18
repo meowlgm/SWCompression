@@ -4,7 +4,6 @@
 // See LICENSE for license information
 
 import Foundation
-import BitByteData
 
 /// Provides functions for work with TAR containers.
 public class TarContainer: Container {

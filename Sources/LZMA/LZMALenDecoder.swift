@@ -3,8 +3,6 @@
 //
 // See LICENSE for license information
 
-import Foundation
-
 struct LZMALenDecoder {
 
     private var choice: Int = LZMAConstants.probInitValue

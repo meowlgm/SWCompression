@@ -3,8 +3,6 @@
 //
 // See LICENSE for license information
 
-import Foundation
-
 /// Represents a (de)compression method.
 public enum CompressionMethod {
     /// BZip2.

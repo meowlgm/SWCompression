@@ -3,8 +3,6 @@
 //
 // See LICENSE for license information
 
-import Foundation
-
 // Deflate specific functions for generation of HuffmanLength arrays from different inputs.
 extension Deflate {
 

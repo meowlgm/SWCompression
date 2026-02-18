@@ -3,8 +3,6 @@
 //
 // See LICENSE for license information
 
-import Foundation
-
 extension BZip2 {
 
     /// Represents the size of the blocks in which data is split during BZip2 compression.

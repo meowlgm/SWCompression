@@ -3,8 +3,6 @@
 //
 // See LICENSE for license information
 
-import Foundation
-
 typealias HuffmanCodes = (codes: [Code], maxBits: Int)
 
 struct Code {

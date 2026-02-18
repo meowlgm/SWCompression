@@ -3,8 +3,6 @@
 //
 // See LICENSE for license information
 
-import Foundation
-
 /**
  Represents an error which happened while processing a GZip archive.
  It may indicate that either archive is damaged or it might not be GZip archive at all.

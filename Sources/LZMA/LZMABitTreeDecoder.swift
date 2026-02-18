@@ -3,8 +3,6 @@
 //
 // See LICENSE for license information
 
-import Foundation
-
 /// Used to decode symbols that need several bits for storing.
 struct LZMABitTreeDecoder {
 

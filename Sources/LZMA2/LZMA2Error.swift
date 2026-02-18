@@ -3,8 +3,6 @@
 //
 // See LICENSE for license information
 
-import Foundation
-
 /**
  Represents an error which happened during LZMA2 decompression.
  It may indicate that either data is damaged or it might not be compressed with LZMA2 at all.

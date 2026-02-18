@@ -4,7 +4,6 @@
 // See LICENSE for license information
 
 import Foundation
-import BitByteData
 
 extension LZ4: CompressionAlgorithm {
 

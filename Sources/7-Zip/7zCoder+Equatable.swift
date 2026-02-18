@@ -3,8 +3,6 @@
 //
 // See LICENSE for license information
 
-import Foundation
-
 extension SevenZipCoder: Equatable {
 
     static func == (lhs: SevenZipCoder, rhs: SevenZipCoder) -> Bool {
